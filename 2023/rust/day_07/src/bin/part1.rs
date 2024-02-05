@@ -62,15 +62,18 @@ impl PartialOrd for Hand {
     }
 }
 
-// TODO THE ANSWER IS TO HIGH?!?!!?!
 fn main() {
     let input = include_str!("input2.txt");
     let mut hands = parse_input(input);
     hands.sort();
-    dbg!(hands.clone());
     let mut sum = 0;
     for (index, hand) in hands.clone().into_iter().enumerate() {
         sum += hand.bid * (index as u32 + 1);
+        println!(
+            "{:}: {hand:?} -> {}",
+            (index + 1),
+            (hand.bid * (index as u32 + 1))
+        );
     }
     dbg!(sum);
 }
@@ -129,7 +132,7 @@ fn match_cards_to_type(cards: &[CardLabel]) -> Type {
         return Type::TwoPair;
     }
 
-    if first_count.is_some_and(|count| count == 1) {
+    if first_count.is_some_and(|count| count == 2) && second_count.is_some_and(|count| count == 1) {
         return Type::OnePair;
     }
 
