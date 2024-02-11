@@ -229,7 +229,6 @@ impl Plan {
         let mut count = 0_u32;
         for row in self.structure.clone() {
             let mut is_inside = false;
-            // let mut temp_count = 0_u32;
             let mut previous_element = '.';
             for element in row {
                 if pipe_loop.elements.contains(&element) {
