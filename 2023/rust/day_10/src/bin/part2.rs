@@ -258,19 +258,6 @@ impl Plan {
         }
         count
     }
-
-    fn display(&self, pipe_loop: PipeLoop) {
-        for row in self.structure.clone() {
-            for element in row {
-                if pipe_loop.elements.contains(&element) {
-                    print!("{}", element.symbol);
-                } else {
-                    print!(".");
-                }
-            }
-            println!();
-        }
-    }
 }
 
 #[derive(Clone)]
