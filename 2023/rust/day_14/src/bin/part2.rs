@@ -1,6 +1,6 @@
 use std::fmt;
 
-#[derive(Clone, PartialEq, Eq)]
+#[derive(Clone, PartialEq, Eq, Debug)]
 struct Platform {
     elements: Vec<Vec<char>>,
 }
@@ -122,7 +122,7 @@ impl Platform {
                 match element {
                     'O' => {
                         tilted_platform.get_mut(last_index).unwrap().push(*element);
-                        last_index -= 1;
+                        last_index = last_index.saturating_sub(1)
                     }
                     '.' => {
                         empty_count += 1;
@@ -161,74 +161,38 @@ impl Platform {
         }
         load_value
     }
+
+    fn find_inner_loop(&mut self) -> Option<(usize, Vec<Platform>)> {
+        let mut previous_platforms = vec![self.clone()];
+        for i in 0..1_000_000_000_usize {
+            self.tilt_north();
+            self.tilt_west();
+            self.tilt_south();
+            self.tilt_east();
+
+            if previous_platforms.contains(self) {
+                let begining_of_loop = previous_platforms.iter().position(|p| *p == *self).unwrap();
+                return Some((i, previous_platforms.split_off(begining_of_loop)));
+            }
+
+            previous_platforms.push(self.clone())
+        }
+
+        None
+    }
 }
 
 fn main() {
-    let input = include_str!("input1.txt");
+    let input = include_str!("input2.txt");
     let mut platform = parse_input(input);
+    let (iter_index, inner_loop) = platform.find_inner_loop().unwrap();
 
-    // println!("{}", platform);
-
-    // platform.tilt_east();
-
-    // println!("{}", platform);
-
-    // TODO Find inner loop
-
-    let previous_platform = platform.clone();
-    for i in 0..1_00 {
-        platform.tilt_north();
-        platform.tilt_west();
-        platform.tilt_south();
-        platform.tilt_east();
-
-        if i % 100_000 == 0 {
-            println!("{}th iteration", i);
-        }
-
-        println!("{}", platform);
-
-        if previous_platform == platform {
-            break;
-        }
-    }
-
-    dbg!(platform.measure_load());
+    let number_of_iter_left = 1_000_000_000 - iter_index;
+    let last_element_index = number_of_iter_left % inner_loop.len() - 1;
+    println!("{:}", last_element_index);
+    let platform = inner_loop.get(last_element_index).unwrap();
+    println!("{:}", platform.measure_load());
 }
-
-// fn tilt_platform(platform: &Vec<Vec<PlatformElement>>) -> (Vec<Vec<PlatformElement>>, usize) {
-//     let mut tilted_platform = Vec::new();
-//     let mut damage_value = 0_usize;
-//     for column in platform {
-//         let mut tilted_column = Vec::new();
-//         let mut empty_elements_count = 0_u32;
-//         for element in column {
-//             match element {
-//                 'O' => {
-//                     damage_value += column.len() - tilted_column.len();
-//                     tilted_column.push(*element);
-//                 }
-//                 '.' => {
-//                     empty_elements_count += 1;
-//                 }
-//                 '#' => {
-//                     for _ in 0..empty_elements_count {
-//                         tilted_column.push('.');
-//                     }
-//                     empty_elements_count = 0;
-//                     tilted_column.push(*element);
-//                 }
-//             }
-//         }
-//         for _ in 0..empty_elements_count {
-//             tilted_column.push('.');
-//         }
-
-//         tilted_platform.push(tilted_column);
-//     }
-
-//     (tilted_platform, damage_value)
-// }
 
 fn parse_input(input: &str) -> Platform {
     let mut platform_elements = Vec::new();
