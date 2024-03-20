@@ -71,8 +71,6 @@ fn count_button_presses() -> usize {
                 .collect::<Vec<(String, String, Pulse)>>(),
         );
 
-        // let mut rx_reached = 0_u32;
-
         while let Some((previous_id, current_id, current_pulse)) = modules_queue.pop_front() {
             if current_pulse == Pulse::Low
                 && (current_id == "ph"
