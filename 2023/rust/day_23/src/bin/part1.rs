@@ -1,5 +1,4 @@
 use priority_queue::DoublePriorityQueue;
-use std::collections::HashSet;
 
 struct Trail {
     nodes: Vec<Vec<char>>,
@@ -59,8 +58,6 @@ impl Trail {
     fn dijkstra(&self) -> u32 {
         let mut unvisited = DoublePriorityQueue::new();
         unvisited.push(self.start, 0);
-
-        // let mut visited = HashSet::new();
 
         let mut max_distance = 0;
 
