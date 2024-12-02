@@ -9,9 +9,16 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"aoc2024/day2"
 )
 
 func main() {
+	fmt.Println(day2.SolvePart1())
+	fmt.Println(day2.SolvePart2())
+}
+
+func task1() {
+	
 	fmt.Println("AOC Task 1")
 	first_column, second_column := read_file_input()
 	sort.Sort(sort.IntSlice(first_column))

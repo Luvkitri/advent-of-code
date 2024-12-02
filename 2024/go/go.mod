@@ -1,3 +1,3 @@
-module github.com/advent-of-code/tree/2024/go
+module aoc2024
 
 go 1.23.3
